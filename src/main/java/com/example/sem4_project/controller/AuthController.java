@@ -5,11 +5,15 @@ import com.example.sem4_project.dto.response.ApiResponse;
 import com.example.sem4_project.dto.response.LoginResponse;
 import com.example.sem4_project.exception.ErrorCode;
 import com.example.sem4_project.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -20,7 +24,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request, BindingResult bindingResult) {
+        // Kiểm tra nếu có lỗi validation
+        if (bindingResult.hasErrors()) {
+            // Tạo thông báo lỗi từ các lỗi validation
+            String errorMessage = bindingResult.getFieldErrors().stream()
+                    .map(fieldError -> fieldError.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            return ApiResponse.<LoginResponse>builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .message(errorMessage)
+                    .result(null)
+                    .build();
+        }
+
         logger.debug("Received login request for username: {}", request.getUsername());
         try {
             LoginResponse loginResponse = authService.login(request);

@@ -1,10 +1,10 @@
 package com.example.sem4_project.controller;
 
-import com.example.sem4_project.dto.request.DepartmentRequest;
+import com.example.sem4_project.dto.request.EmployeeRequest;
 import com.example.sem4_project.dto.response.ApiResponse;
-import com.example.sem4_project.dto.response.DepartmentResponse;
+import com.example.sem4_project.dto.response.EmployeeResponse;
 import com.example.sem4_project.exception.ErrorCode;
-import com.example.sem4_project.service.DepartmentService;
+import com.example.sem4_project.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,29 +19,29 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/departments")
-public class DepartmentController {
+@RequestMapping("/api/employees")
+public class EmployeeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(DepartmentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
-    private DepartmentService departmentService;
+    private EmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<DepartmentResponse>>> getDepartments(
+    public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getEmployees(
             @RequestParam(required = false) String status
     ) {
-        logger.info("Received getDepartments request: status={}", status);
-        List<DepartmentResponse> departments = departmentService.getDepartments(status);
-        return new ResponseEntity<>(ApiResponse.success(ErrorCode.SUCCESS, departments), HttpStatus.OK);
+        logger.info("Received getEmployees request: status={}", status);
+        List<EmployeeResponse> employees = employeeService.getEmployees(status);
+        return new ResponseEntity<>(ApiResponse.success(ErrorCode.SUCCESS, employees), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<DepartmentResponse>> addDepartment(
-            @RequestBody @Valid DepartmentRequest request,
+    public ResponseEntity<ApiResponse<EmployeeResponse>> addEmployee(
+            @RequestBody @Valid EmployeeRequest request,
             BindingResult bindingResult
     ) {
-        logger.info("Received addDepartment request: departmentName={}", request.getDepartmentName());
+        logger.info("Received addEmployee request for email={}", request.getEmail());
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldErrors().stream()
                     .map(fieldError -> fieldError.getDefaultMessage())
@@ -50,21 +50,21 @@ public class DepartmentController {
             return new ResponseEntity<>(ApiResponse.error(ErrorCode.VALIDATION_FAILED, errorMessage), HttpStatus.BAD_REQUEST);
         }
         try {
-            DepartmentResponse response = departmentService.addDepartment(request);
+            EmployeeResponse response = employeeService.addEmployee(request);
             return new ResponseEntity<>(ApiResponse.success(ErrorCode.SUCCESS, response), HttpStatus.CREATED);
         } catch (IllegalStateException e) {
-            logger.warn("Add department failed: {}", e.getMessage());
+            logger.warn("Add employee failed: {}", e.getMessage());
             return new ResponseEntity<>(ApiResponse.error(ErrorCode.OPERATION_FAILED, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<DepartmentResponse>> updateDepartment(
+    public ResponseEntity<ApiResponse<EmployeeResponse>> updateEmployee(
             @PathVariable UUID id,
-            @RequestBody @Valid DepartmentRequest request,
+            @RequestBody @Valid EmployeeRequest request,
             BindingResult bindingResult
     ) {
-        logger.info("Received updateDepartment request for id={}", id);
+        logger.info("Received updateEmployee request for id={}", id);
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldErrors().stream()
                     .map(fieldError -> fieldError.getDefaultMessage())
@@ -73,22 +73,22 @@ public class DepartmentController {
             return new ResponseEntity<>(ApiResponse.error(ErrorCode.VALIDATION_FAILED, errorMessage), HttpStatus.BAD_REQUEST);
         }
         try {
-            DepartmentResponse response = departmentService.updateDepartment(id, request);
+            EmployeeResponse response = employeeService.updateEmployee(id, request);
             return new ResponseEntity<>(ApiResponse.success(ErrorCode.SUCCESS, response), HttpStatus.OK);
         } catch (IllegalStateException e) {
-            logger.warn("Update department failed: {}", e.getMessage());
+            logger.warn("Update employee failed: {}", e.getMessage());
             return new ResponseEntity<>(ApiResponse.error(ErrorCode.OPERATION_FAILED, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteDepartment(@PathVariable UUID id) {
-        logger.info("Received deleteDepartment request for id={}", id);
+    public ResponseEntity<ApiResponse<Void>> deleteEmployee(@PathVariable UUID id) {
+        logger.info("Received deleteEmployee request for id={}", id);
         try {
-            departmentService.deleteDepartment(id);
+            employeeService.deleteEmployee(id);
             return new ResponseEntity<>(ApiResponse.success(ErrorCode.SUCCESS), HttpStatus.OK);
         } catch (IllegalStateException e) {
-            logger.warn("Delete department failed: {}", e.getMessage());
+            logger.warn("Delete employee failed: {}", e.getMessage());
             return new ResponseEntity<>(ApiResponse.error(ErrorCode.OPERATION_FAILED, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }

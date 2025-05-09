@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,14 +19,20 @@ public class User {
 
     @Id
     @Column(name = "user_id", columnDefinition = "CHAR(36)")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     UUID userId;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", unique = true)
+    @JoinColumn(name = "employee_id")
     Employee employee;
 
     @Column(name = "username", nullable = false, unique = true)
     String username;
+
+    @Version
+    @Column(name = "version")
+    Integer version;
+
 
     @Column(name = "password", nullable = false)
     String password;
@@ -48,9 +55,9 @@ public class User {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
-    String createdAt;
+    LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
-    String updatedAt;
+    LocalDateTime updatedAt;
 }

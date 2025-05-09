@@ -1,18 +1,19 @@
 package com.example.sem4_project.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequest {
+public class UserRequest {
+
+    String employeeId;
+
     @NotBlank(message = "Tên đăng nhập là bắt buộc")
     @Pattern(
             regexp = "^(\\p{Lu}\\p{L}+\\s){1,}\\p{Lu}\\p{L}+$",
@@ -28,4 +29,10 @@ public class LoginRequest {
             message = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm ít nhất một chữ cái viết hoa, một chữ số và một ký tự đặc biệt"
     )
     String password;
+
+    @NotBlank(message = "Email là bắt buộc")
+    @Email(message = "Địa chỉ email phải hợp lệ")
+    String email;
+
+    String roleId;
 }

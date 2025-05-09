@@ -15,6 +15,7 @@ public class ApiResponse<T> {
     int code;
     String message;
     T result;
+    private ErrorCode errorCode;
 
     public static <T> ApiResponse<T> success(ErrorCode errorCode, T result) {
         return ApiResponse.<T>builder()
@@ -26,5 +27,18 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> success(ErrorCode code) {
         return success(code, null);
+    }
+
+    public boolean isSuccess() {
+        return errorCode == ErrorCode.SUCCESS;
+    }
+
+    // Phương thức error
+    public static <T> ApiResponse<T> error(ErrorCode errorCode, String errorMessage) {
+        return ApiResponse.<T>builder()
+                .code(errorCode.getStatus().value())
+                .message(errorMessage)
+                .result(null)
+                .build();
     }
 }

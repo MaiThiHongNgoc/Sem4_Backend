@@ -55,7 +55,22 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi hệ thống"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Yêu cầu không hợp lệ"),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy dữ liệu"),
-    OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Thao tác thất bại");
+    OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Thao tác thất bại"),
+
+    OPERATION_SUCCESSFUL(HttpStatus.OK, "Hoạt động thành công"),
+    INVALID_UUID(HttpStatus.OK, "Invalid UUID format"),
+    VALIDATION_FAILED(HttpStatus.OK, "Validation failed"),
+    OTP_EXPIRED(HttpStatus.OK, "Mã OTP đã hết hạn"),
+    INVALID_OTP(HttpStatus.OK, "Mã OTP không chính xác"),
+    OTP_SENT_SUCCESSFULLY(HttpStatus.OK, "Mã OTP đã được gửi tới email."),
+    PASSWORD_UPDATED_SUCCESSFULLY(HttpStatus.OK, "Mật khẩu đã được cập nhật thành công."),
+    INVALID_INPUT(HttpStatus.OK,"Invalid input."),
+    OTP_VERIFIED_SUCCESSFULLY(HttpStatus.OK,"OTP verified successfully.");
+
+
+
+
+
 
     private final HttpStatus status;
     private final String message;
